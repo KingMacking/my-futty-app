@@ -1,18 +1,35 @@
 import { WorldcupPath } from '../components/WorldcupPath'
-import type { Worldcup } from '../types'
+import { CoinFlipModal } from '../components/CoinFlipModal'
+import { useWorldcupStore } from '../store/worldcupStore'
 
-interface Props {
-  worldcup: Worldcup | null
-  loading: boolean
-}
+export function Dashboard() {
+  const { worldcup, loading } = useWorldcupStore()
 
-export function Dashboard({ worldcup, loading }: Props) {
-  if (loading) return <div className="loading">Cargando mundial...</div>
-  if (!worldcup) return <p className="error-text">Error cargando el mundial</p>
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20 text-muted-foreground text-sm">
+        Cargando mundial...
+      </div>
+    )
+  }
+
+  if (!worldcup) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
+        <span className="text-4xl">⚽</span>
+        <p className="font-semibold">No hay mundial activo</p>
+        <p className="text-sm text-muted-foreground">
+          Registrá un partido con "Cuenta para mi mundial" para arrancar.
+        </p>
+      </div>
+    )
+  }
 
   return (
-    <div className="page">
+    <>
       <WorldcupPath worldcup={worldcup} />
-    </div>
+      <CoinFlipModal />
+    </>
   )
 }
+

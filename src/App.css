@@ -142,13 +142,8 @@
   margin-top: 8px;
 }
 
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-size: 1.2rem;
-}
+/* Estilos globales — usar Tailwind en los componentes */
+
 
 .auth-container {
   display: flex;
