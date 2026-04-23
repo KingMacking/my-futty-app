@@ -5,17 +5,18 @@ import { Dashboard } from './pages/Dashboard'
 import { Matches } from './pages/Matches'
 import { Groups } from './pages/Groups'
 import { GroupDetail } from './pages/GroupDetail'
+import { ProfileSetup } from './pages/ProfileSetup'
+import { Profile } from './pages/Profile'
 import { useAuthStore } from './store/authStore'
 import { useWorldcupStore } from './store/worldcupStore'
-import { Button } from '@/components/ui/button'
 
 function App() {
-  const { session, loading, init } = useAuthStore()
+  const { session, profile, loading, profileLoading, init } = useAuthStore()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => init(), [])
 
-  if (loading) {
+  if (loading || profileLoading) {
     return (
       <div className="flex items-center justify-center h-dvh text-muted-foreground">
         Cargando...
@@ -24,12 +25,13 @@ function App() {
   }
 
   if (!session) return <AuthForm />
+  if (!profile?.username) return <ProfileSetup />
 
   return <AppContent />
 }
 
 function AppContent() {
-  const { session, signOut } = useAuthStore()
+  const { session } = useAuthStore()
   const fetch = useWorldcupStore(state => state.fetch)
 
   const userId = session?.user.id
@@ -43,7 +45,6 @@ function AppContent() {
     <div className="flex flex-col h-dvh bg-background text-foreground">
       <header className="flex items-center justify-between px-5 py-3 border-b border-border shrink-0">
         <span className="font-bold text-lg">⚽ Futty</span>
-        <Button variant="outline" size="sm" onClick={signOut}>Salir</Button>
       </header>
 
       <main className="flex-1 overflow-y-auto w-full max-w-lg mx-auto px-4 py-5">
@@ -52,6 +53,7 @@ function AppContent() {
           <Route path="/matches" element={<Matches />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/groups/:id" element={<GroupDetail />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
@@ -61,6 +63,7 @@ function AppContent() {
           { to: '/', end: true, icon: '🌍', label: 'Mundial' },
           { to: '/matches', end: false, icon: '⚽', label: 'Partidos' },
           { to: '/groups', end: false, icon: '👥', label: 'Grupos' },
+          { to: '/profile', end: false, icon: '👤', label: 'Perfil' },
         ].map(({ to, end, icon, label }) => (
           <NavLink
             key={to}

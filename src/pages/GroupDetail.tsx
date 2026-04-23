@@ -38,7 +38,7 @@ export function GroupDetail() {
 
       const { data: profileRows } = await supabase
         .from('profiles')
-        .select('id, email')
+        .select('id, email, username, full_name')
         .in('id', userIds)
 
       const profileMap: Record<string, Profile> = {}
@@ -93,7 +93,8 @@ export function GroupDetail() {
         ) : (
           members.map(m => {
             const isMe = m.user_id === session?.user.id
-            const label = m.profile?.email ?? m.user_id.slice(0, 8)
+            const username = m.profile?.username ?? `usuario_${m.user_id.slice(0, 6)}`
+            const fullName = m.profile?.full_name ?? ''
             return (
               <div
                 key={m.user_id}
@@ -101,13 +102,14 @@ export function GroupDetail() {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-bold text-muted-foreground">
-                    {label[0].toUpperCase()}
+                    {username[0].toUpperCase()}
                   </div>
                   <div>
                     <p className="text-sm font-medium">
-                      {label}
+                      @{username}
                       {isMe && <span className="ml-2 text-xs text-green-400">(vos)</span>}
                     </p>
+                    {fullName && <p className="text-xs text-muted-foreground">{fullName}</p>}
                     <p className="text-xs text-muted-foreground">
                       desde {new Date(m.joined_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </p>

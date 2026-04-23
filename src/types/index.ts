@@ -40,4 +40,6 @@ export interface GroupMember {
 export interface Profile {
   id: string
   email: string
+  username: string | null
+  full_name: string | null
 }
