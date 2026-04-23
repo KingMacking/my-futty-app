@@ -20,3 +20,24 @@ export interface Match {
   counts_for_worldcup: boolean
   created_at: string
 }
+
+export interface Group {
+  id: string
+  name: string
+  created_by: string
+  code: string
+  created_at: string
+  member_count?: number
+}
+
+export interface GroupMember {
+  id: string
+  group_id: string
+  user_id: string
+  joined_at: string
+}
+
+export interface Profile {
+  id: string
+  email: string
+}

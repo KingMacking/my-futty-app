@@ -4,6 +4,7 @@ import { AuthForm } from './components/AuthForm'
 import { Dashboard } from './pages/Dashboard'
 import { Matches } from './pages/Matches'
 import { Groups } from './pages/Groups'
+import { GroupDetail } from './pages/GroupDetail'
 import { useAuthStore } from './store/authStore'
 import { useWorldcupStore } from './store/worldcupStore'
 import { Button } from '@/components/ui/button'
@@ -50,6 +51,7 @@ function AppContent() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/matches" element={<Matches />} />
           <Route path="/groups" element={<Groups />} />
+          <Route path="/groups/:id" element={<GroupDetail />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
