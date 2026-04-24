@@ -81,10 +81,21 @@ export function Groups() {
         </div>
       )}
 
-      {loading
-        ? <p className="text-muted-foreground text-sm text-center py-6">Cargando...</p>
-        : <GroupList groups={groups} />
-      }
+      {loading ? (
+        <div className="flex flex-col gap-3">
+          {[1, 2].map(i => (
+            <div key={i} className="rounded-xl border border-border bg-card px-4 py-3 flex items-center justify-between animate-pulse">
+              <div className="flex flex-col gap-1.5">
+                <div className="h-3.5 w-32 bg-muted rounded" />
+                <div className="h-2.5 w-20 bg-muted/60 rounded" />
+              </div>
+              <div className="h-3 w-8 bg-muted rounded" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <GroupList groups={groups} />
+      )}
     </div>
   )
 }

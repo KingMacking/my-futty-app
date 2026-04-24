@@ -11,6 +11,7 @@ export interface Worldcup {
   group_losses: number
   status: WorldcupStatus
   created_at: string
+  ended_at: string | null
 }
 
 export interface Match {

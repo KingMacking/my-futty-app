@@ -10,6 +10,7 @@ interface GroupsState {
   fetch: (userId: string) => Promise<void>
   create: (userId: string, name: string) => Promise<boolean>
   join: (userId: string, code: string) => Promise<boolean>
+  leave: (userId: string, groupId: string) => Promise<boolean>
 }
 
 export const useGroupsStore = create<GroupsState>((set, get) => ({
@@ -126,6 +127,23 @@ export const useGroupsStore = create<GroupsState>((set, get) => ({
     const newGroup: Group = { ...group, member_count: countData?.length ?? 1 }
     set({ groups: [newGroup, ...get().groups], submitting: false })
     toast.success(`Te uniste a "${group.name}"`)
+    return true
+  },
+
+  leave: async (userId: string, groupId: string) => {
+    const { error } = await supabase
+      .from('group_members')
+      .delete()
+      .eq('user_id', userId)
+      .eq('group_id', groupId)
+
+    if (error) {
+      toast.error('Error al salir del grupo')
+      return false
+    }
+
+    set({ groups: get().groups.filter(g => g.id !== groupId) })
+    toast.success('Saliste del grupo')
     return true
   },
 }))

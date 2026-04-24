@@ -73,7 +73,7 @@ export const useWorldcupStore = create<WorldcupState>((set, get) => ({
     if (!worldcup || worldcup.status !== 'active') return
 
     const transition = calcTransition(worldcup, result)
-    const update = buildWorldcupUpdate(worldcup, result, transition)
+    let update = buildWorldcupUpdate(worldcup, result, transition)
 
     // Registrar en worldcup_matches
     await supabase.from('worldcup_matches').insert({
@@ -107,6 +107,10 @@ export const useWorldcupStore = create<WorldcupState>((set, get) => ({
     }
 
     // advance / completed / eliminated
+    if (transition.type === 'eliminated' || transition.type === 'completed') {
+      update = { ...update, ended_at: new Date().toISOString() }
+    }
+
     const { data, error } = await supabase
       .from('worldcups')
       .update(update)
@@ -143,7 +147,7 @@ export const useWorldcupStore = create<WorldcupState>((set, get) => ({
     let update: Partial<Worldcup>
 
     if (!won) {
-      update = { status: 'eliminated' }
+      update = { status: 'eliminated', ended_at: new Date().toISOString() }
       toast.error('Perdiste la moneda — quedaste eliminado 😢')
     } else if (worldcup.current_stage === 'groups') {
       update = { current_stage: 'round_of_16' }
@@ -160,7 +164,7 @@ export const useWorldcupStore = create<WorldcupState>((set, get) => ({
         }
         toast.success(`¡Ganaste la moneda! Avanzás a ${labels[next]} 🎉`)
       } else {
-        update = { status: 'completed' }
+        update = { status: 'completed', ended_at: new Date().toISOString() }
         toast.success('¡Campeón del Mundo! 🏆')
       }
     }

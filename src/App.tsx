@@ -1,20 +1,31 @@
 import { useEffect } from 'react'
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { Routes, Route, NavLink, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { AuthForm } from './components/AuthForm'
 import { Dashboard } from './pages/Dashboard'
 import { Matches } from './pages/Matches'
 import { Groups } from './pages/Groups'
 import { GroupDetail } from './pages/GroupDetail'
+import { JoinGroup } from './pages/JoinGroup'
 import { ProfileSetup } from './pages/ProfileSetup'
 import { Profile } from './pages/Profile'
+import { PublicProfile } from './pages/PublicProfile'
 import { useAuthStore } from './store/authStore'
 import { useWorldcupStore } from './store/worldcupStore'
 
 function App() {
   const { session, profile, loading, profileLoading, init } = useAuthStore()
+  const location = useLocation()
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => init(), [])
+
+  // Guardar código de invitación si el usuario llega sin sesión
+  useEffect(() => {
+    const match = location.pathname.match(/^\/join\/([A-Z0-9]{6})$/i)
+    if (match && !session) {
+      sessionStorage.setItem('pendingJoinCode', match[1].toUpperCase())
+    }
+  }, [location.pathname, session])
 
   if (loading || profileLoading) {
     return (
@@ -33,6 +44,7 @@ function App() {
 function AppContent() {
   const { session } = useAuthStore()
   const fetch = useWorldcupStore(state => state.fetch)
+  const navigate = useNavigate()
 
   const userId = session?.user.id
 
@@ -40,6 +52,13 @@ function AppContent() {
     if (userId) fetch(userId)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
+
+  // Redirigir a join si hay código pendiente
+  useEffect(() => {
+    const code = sessionStorage.getItem('pendingJoinCode')
+    if (code) navigate(`/join/${code}`, { replace: true })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="flex flex-col h-dvh bg-background text-foreground">
@@ -53,7 +72,9 @@ function AppContent() {
           <Route path="/matches" element={<Matches />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/groups/:id" element={<GroupDetail />} />
+          <Route path="/join/:code" element={<JoinGroup />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:userId" element={<PublicProfile />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
