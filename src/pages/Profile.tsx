@@ -304,7 +304,7 @@ export function Profile() {
         </div>
       )}
 
-      {/* Cerrar sesión */}}
+      {/* Cerrar sesión */}
       <Button variant="destructive" className="w-full" onClick={signOut}>
         Cerrar sesión
       </Button>
