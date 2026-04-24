@@ -257,7 +257,6 @@ export function Profile() {
         ) : (
           history.map(wc => {
             const isChampion = wc.status === 'completed'
-            const date = new Date(wc.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })
             return (
               <div key={wc.id} className="rounded-xl border border-border bg-card px-4 py-3 flex items-center justify-between">
                 <div>
