@@ -23,6 +23,7 @@ const STATUS_BADGE: Record<string, { label: string; className: string }> = {
 const RESULT_ICON: Record<string, { icon: string; className: string; label: string }> = {
   win:  { icon: 'V', className: 'text-green-400 bg-green-950/50 border-green-800/40', label: 'Victoria' },
   draw: { icon: 'E', className: 'text-yellow-400 bg-yellow-950/50 border-yellow-800/40', label: 'Empate' },
+  lose: { icon: 'D', className: 'text-red-400 bg-red-950/50 border-red-800/40', label: 'Derrota' },
   loss: { icon: 'D', className: 'text-red-400 bg-red-950/50 border-red-800/40', label: 'Derrota' },
 }
 
@@ -349,6 +350,7 @@ export function GroupDetail() {
               const username = item.profile?.username ?? `usuario_${item.user_id.slice(0, 6)}`
               const isMe = item.user_id === session?.user.id
               const res = RESULT_ICON[item.result]
+              if (!res) return null
               const date = new Date(item.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short' })
               return (
                 <div key={item.id} className="rounded-xl border border-border bg-card px-4 py-3 flex items-center justify-between">
