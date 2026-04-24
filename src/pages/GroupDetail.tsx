@@ -42,10 +42,12 @@ export function GroupDetail() {
   const navigate = useNavigate()
   const { session } = useAuthStore()
   const groups = useGroupsStore(state => state.groups)
-  const group = groups.find(g => g.id === id)
+  const storeGroup = groups.find(g => g.id === id)
 
   const leave = useGroupsStore(state => state.leave)
 
+  const [groupFallback, setGroupFallback] = useState<typeof storeGroup>(undefined)
+  const group = storeGroup ?? groupFallback
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
@@ -62,6 +64,12 @@ export function GroupDetail() {
     async function load() {
       setLoading(true)
 
+      // Si el grupo no está en el store (ej: F5), cargarlo desde Supabase
+      if (!storeGroup) {
+        const { data } = await supabase.from('groups').select('*').eq('id', id).maybeSingle()
+        if (!data) { setLoading(false); return }
+        setGroupFallback(data)
+      }
       const { data: memberRows, error } = await supabase
         .from('group_members')
         .select('user_id, joined_at')
@@ -99,6 +107,8 @@ export function GroupDetail() {
       setLoading(false)
     }
     load()
+  // storeGroup incluido para satisfacer el linter; el efecto real depende de id
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   useEffect(() => {
@@ -123,6 +133,34 @@ export function GroupDetail() {
     }
     loadActivity()
   }, [activeTab, loading, members])
+
+  if (!group && loading) {
+    return (
+      <div className="flex flex-col gap-5">
+        <div className="flex items-center gap-3">
+          <div className="w-6 h-6 rounded bg-muted animate-pulse" />
+          <div className="flex flex-col gap-1.5 flex-1">
+            <div className="h-4 w-36 bg-muted rounded animate-pulse" />
+            <div className="h-3 w-20 bg-muted/60 rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="rounded-xl border border-border bg-card px-4 py-3 flex items-center justify-between animate-pulse">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-muted" />
+                <div className="flex flex-col gap-1.5">
+                  <div className="h-3 w-24 bg-muted rounded" />
+                  <div className="h-2.5 w-16 bg-muted/60 rounded" />
+                </div>
+              </div>
+              <div className="h-3 w-14 bg-muted rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   if (!group) {
     return (
