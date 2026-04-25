@@ -91,6 +91,9 @@ export function PublicProfile() {
   const draws  = matches.filter(m => m.result === 'draw').length
   const losses = matches.filter(m => m.result === 'lose').length
   const winRate = totalMatches > 0 ? Math.round((wins / totalMatches) * 100) : 0
+  const totalGoals   = matches.reduce((acc, m) => acc + (m.goals ?? 0), 0)
+  const totalAssists = matches.reduce((acc, m) => acc + (m.assists ?? 0), 0)
+  const hasGoalStats = matches.some(m => m.goals !== null || m.assists !== null)
 
   const currentStreak = (() => {
     if (matches.length === 0) return null
@@ -193,6 +196,18 @@ export function PublicProfile() {
               <p className="text-xs text-muted-foreground mt-0.5">Mejor racha</p>
             </div>
           </div>
+          {hasGoalStats && (
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-xl border border-border bg-card p-3 text-center">
+                <p className="text-xl font-bold">⚽ {totalGoals}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Goles</p>
+              </div>
+              <div className="rounded-xl border border-border bg-card p-3 text-center">
+                <p className="text-xl font-bold">🎯 {totalAssists}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Asistencias</p>
+              </div>
+            </div>
+          )}
           {currentStreak && currentStreak.count >= 2 && (
             <div className="rounded-xl border border-border bg-card px-4 py-3 flex items-center gap-2">
               <span className="text-lg">
@@ -245,7 +260,9 @@ export function PublicProfile() {
               <div key={m.id} className="rounded-xl border border-border bg-card px-4 py-3 flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">{date}</p>
-                  {m.counts_for_worldcup && <p className="text-xs text-muted-foreground">mundial</p>}
+                  <p className="text-xs text-muted-foreground">
+                    {[m.counts_for_worldcup ? 'mundial' : '', m.goals !== null ? `⚽ ${m.goals}` : '', m.assists !== null ? `🎯 ${m.assists}` : ''].filter(Boolean).join(' · ') || '—'}
+                  </p>
                 </div>
                 <span className={`text-xs font-bold px-2 py-1 rounded-full border ${res.className}`}>
                   {res.icon}

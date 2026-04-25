@@ -103,3 +103,47 @@
 
 - [ ] Listar mundiales anteriores del usuario
 - [ ] Ver etapa alcanzada y stats de cada uno
+
+---
+
+## 🔲 Step 14 — Goles y asistencias en partidos
+
+- [ ] Agregar campos opcionales `goals` y `assists` al formulario de carga de partido (personal)
+- [ ] Guardar en DB (campos nullable en `matches`)
+- [ ] Mostrar goles/asistencias en historial de partidos del perfil
+- [ ] Sumar goles y asistencias totales como stats en el perfil
+- [ ] Incluir goles/asistencias en las stats del mundial (acumulado por worldcup)
+- [ ] Mostrar en worldcup history del perfil: goles y asistencias de cada mundial
+
+---
+
+## 🔲 Step 15 — Partidos de grupo
+
+- [ ] SQL: nueva tabla `group_matches` (id, group_id, team_a_score, team_b_score, played_at, replay_url)
+- [ ] SQL: nueva tabla `group_match_players` (id, group_match_id, user_id, team ('a'|'b'), goals, assists)
+- [ ] UI: botón "Nuevo partido" en el detalle del grupo
+- [ ] Formulario: seleccionar participantes del grupo y asignarlos a equipo A o B
+- [ ] Formulario: ingresar resultado (score equipo A vs equipo B)
+- [ ] Formulario: campo opcional para link de repetición
+- [ ] Reemplazar el activity feed actual por el feed de partidos de grupo
+- [ ] Feed: mostrar cada partido con equipos, resultado, fecha y jugadores
+- [ ] Los partidos de grupo NO están vinculados a partidos personales ni a mundiales
+
+---
+
+## 🔲 Step 16 — Link de repetición
+
+- [ ] Agregar campo opcional `replay_url` al formulario de partido personal
+- [ ] Guardar en `matches` (campo nullable)
+- [ ] Mostrar link en historial de partidos del perfil si existe
+- [ ] (Ya incluido en partidos de grupo en Step 15)
+
+---
+
+## 🔲 Step 17 — Carga de partidos antiguos
+
+- [ ] Definir approach: ¿fecha manual en formulario? ¿bulk import?
+- [ ] Permitir seleccionar fecha/hora al registrar un partido (en vez de usar `created_at` automático)
+- [ ] Validar que la fecha no sea futura
+- [ ] Ordenar historial por `played_at` en vez de `created_at`
+- [ ] Compatibilidad con partidos de grupo (misma lógica de fecha manual)

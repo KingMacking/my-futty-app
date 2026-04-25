@@ -13,8 +13,13 @@ Una app donde jugadores amateur pueden registrar partidos y competir en “mundi
   - Perdí
   - Empaté
 - Opción:
-  - “Cuenta para mi mundial”
-
+  - “Cuenta para mi mundial”- Stats opcionales:
+  - Goles anotados (número, nullable)
+  - Asistencias (número, nullable)
+  - Estas stats se acumulan en el perfil y en el mundial activo
+- Opcionales adicionales:
+  - Link de repetición (URL, nullable)
+  - Fecha manual para cargar partidos antiguos (por defecto = ahora)
 ---
 
 ## 🌍 Mundial (Core)
@@ -45,11 +50,20 @@ Una app donde jugadores amateur pueden registrar partidos y competir en “mundi
 
 ---
 
-## 👥 Grupos (MVP simple)
+## 👥 Grupos
 
 - Crear grupo
-- Unirse
-- Ver actividad básica
+- Unirse por código / deep link
+- Ver miembros
+- **Partidos de grupo:**
+  - Cualquier miembro puede crear un partido de grupo
+  - Se eligen jugadores del grupo y se asignan a equipo A o B
+  - Se ingresa el score final (ej: 3-2)
+  - Cada jugador puede tener goles y asistencias en el partido
+  - Campo opcional para link de repetición
+  - Los partidos de grupo NO afectan los mundiales personales ni el historial individual
+  - El feed del grupo muestra estos partidos (reemplaza el activity feed de matches personales)
+- Salir del grupo
 
 ---
 

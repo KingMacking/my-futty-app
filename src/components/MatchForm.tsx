@@ -17,11 +17,21 @@ export function MatchForm() {
   const { addMatch, submitting } = useMatchesStore()
   const [result, setResult] = useState<MatchResult | null>(null)
   const [countsForWorldcup, setCountsForWorldcup] = useState(true)
+  const [showStats, setShowStats] = useState(false)
+  const [goals, setGoals] = useState('')
+  const [assists, setAssists] = useState('')
 
   async function handleSubmit() {
     if (!result || !session) return
-    const ok = await addMatch(session.user.id, result, countsForWorldcup)
-    if (ok) setResult(null)
+    const g = showStats && goals !== '' ? parseInt(goals, 10) : null
+    const a = showStats && assists !== '' ? parseInt(assists, 10) : null
+    const ok = await addMatch(session.user.id, result, countsForWorldcup, g, a)
+    if (ok) {
+      setResult(null)
+      setGoals('')
+      setAssists('')
+      setShowStats(false)
+    }
   }
 
   return (
@@ -54,6 +64,46 @@ export function MatchForm() {
           onCheckedChange={setCountsForWorldcup}
         />
       </div>
+
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium">Anotar goles y asistencias</p>
+          <p className="text-xs text-muted-foreground">Opcional — suma a tus stats personales</p>
+        </div>
+        <Switch
+          checked={showStats}
+          onCheckedChange={setShowStats}
+        />
+      </div>
+
+      {showStats && (
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs text-muted-foreground">Goles ⚽</label>
+            <input
+              type="number"
+              min="0"
+              max="99"
+              placeholder="0"
+              value={goals}
+              onChange={e => setGoals(e.target.value)}
+              className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors text-center"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs text-muted-foreground">Asistencias 🎯</label>
+            <input
+              type="number"
+              min="0"
+              max="99"
+              placeholder="0"
+              value={assists}
+              onChange={e => setAssists(e.target.value)}
+              className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors text-center"
+            />
+          </div>
+        </div>
+      )}
 
       <Button
         onClick={handleSubmit}

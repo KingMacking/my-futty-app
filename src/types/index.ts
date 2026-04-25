@@ -19,6 +19,8 @@ export interface Match {
   user_id: string
   result: MatchResult
   counts_for_worldcup: boolean
+  goals: number | null
+  assists: number | null
   created_at: string
 }
 

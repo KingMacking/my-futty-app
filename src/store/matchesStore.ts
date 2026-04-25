@@ -8,7 +8,7 @@ interface MatchesState {
   loading: boolean
   submitting: boolean
   fetch: (userId: string) => Promise<void>
-  addMatch: (userId: string, result: MatchResult, countsForWorldcup: boolean) => Promise<boolean>
+  addMatch: (userId: string, result: MatchResult, countsForWorldcup: boolean, goals?: number | null, assists?: number | null) => Promise<boolean>
 }
 
 export const useMatchesStore = create<MatchesState>((set, get) => ({
@@ -32,11 +32,11 @@ export const useMatchesStore = create<MatchesState>((set, get) => ({
     set({ loading: false })
   },
 
-  addMatch: async (userId, result, countsForWorldcup) => {
+  addMatch: async (userId, result, countsForWorldcup, goals, assists) => {
     set({ submitting: true })
     const { data, error } = await supabase
       .from('matches')
-      .insert({ user_id: userId, result, counts_for_worldcup: countsForWorldcup })
+      .insert({ user_id: userId, result, counts_for_worldcup: countsForWorldcup, goals: goals ?? null, assists: assists ?? null })
       .select()
       .single()
 
