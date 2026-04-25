@@ -46,7 +46,7 @@ export function WorldcupDetail() {
       ])
 
       setWorldcup(wcData as Worldcup ?? null)
-      const mapped = ((wmData ?? []) as { stage: string; matches: Match }[])
+      const mapped = ((wmData ?? []) as unknown as { stage: string; matches: Match }[])
         .map(row => ({ ...row.matches, stage: row.stage }))
         .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
       setWcMatches(mapped)

@@ -46,7 +46,7 @@ export function Profile() {
             .select('worldcup_id, matches(goals, assists)')
             .in('worldcup_id', wcs.map(w => w.id))
           const map: Record<string, { goals: number; assists: number }> = {}
-          for (const row of (wmData ?? []) as { worldcup_id: string; matches: { goals: number | null; assists: number | null } }[]) {
+          for (const row of (wmData ?? []) as unknown as { worldcup_id: string; matches: { goals: number | null; assists: number | null } }[]) {
             if (!map[row.worldcup_id]) map[row.worldcup_id] = { goals: 0, assists: 0 }
             map[row.worldcup_id].goals   += row.matches?.goals   ?? 0
             map[row.worldcup_id].assists += row.matches?.assists ?? 0
