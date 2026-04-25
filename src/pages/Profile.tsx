@@ -17,8 +17,13 @@ const STAGE_LABELS: Record<string, string> = {
 
 export function Profile() {
   const { session, profile, saveProfile, signOut } = useAuthStore()
-  const matches = useMatchesStore(state => state.matches)
+  const { matches, fetch: fetchMatches } = useMatchesStore()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (session?.user.id) fetchMatches(session.user.id)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user.id])
 
   const [editing, setEditing] = useState(false)
   const [fullName, setFullName] = useState(profile?.full_name ?? '')
