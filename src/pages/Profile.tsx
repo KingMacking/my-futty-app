@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '../store/authStore'
@@ -17,6 +18,7 @@ const STAGE_LABELS: Record<string, string> = {
 export function Profile() {
   const { session, profile, saveProfile, signOut } = useAuthStore()
   const matches = useMatchesStore(state => state.matches)
+  const navigate = useNavigate()
 
   const [editing, setEditing] = useState(false)
   const [fullName, setFullName] = useState(profile?.full_name ?? '')
@@ -24,6 +26,7 @@ export function Profile() {
   const [saving, setSaving] = useState(false)
   const [history, setHistory] = useState<Worldcup[]>([])
   const [historyLoading, setHistoryLoading] = useState(false)
+  const [wcStats, setWcStats] = useState<Record<string, { goals: number; assists: number }>>({}) 
 
   useEffect(() => {
     if (!session?.user.id) return
@@ -34,8 +37,22 @@ export function Profile() {
       .eq('user_id', session.user.id)
       .in('status', ['eliminated', 'completed'])
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
-        setHistory((data ?? []) as Worldcup[])
+      .then(async ({ data }) => {
+        const wcs = (data ?? []) as Worldcup[]
+        setHistory(wcs)
+        if (wcs.length > 0) {
+          const { data: wmData } = await supabase
+            .from('worldcup_matches')
+            .select('worldcup_id, matches(goals, assists)')
+            .in('worldcup_id', wcs.map(w => w.id))
+          const map: Record<string, { goals: number; assists: number }> = {}
+          for (const row of (wmData ?? []) as { worldcup_id: string; matches: { goals: number | null; assists: number | null } }[]) {
+            if (!map[row.worldcup_id]) map[row.worldcup_id] = { goals: 0, assists: 0 }
+            map[row.worldcup_id].goals   += row.matches?.goals   ?? 0
+            map[row.worldcup_id].assists += row.matches?.assists ?? 0
+          }
+          setWcStats(map)
+        }
         setHistoryLoading(false)
       })
   }, [session?.user.id])
@@ -270,8 +287,17 @@ export function Profile() {
         ) : (
           history.map(wc => {
             const isChampion = wc.status === 'completed'
+            const stats = wcStats[wc.id]
+            const statParts = [
+              stats?.goals   ? `⚽ ${stats.goals}`   : '',
+              stats?.assists ? `🎯 ${stats.assists}` : '',
+            ].filter(Boolean).join(' · ')
             return (
-              <div key={wc.id} className="rounded-xl border border-border bg-card px-4 py-3 flex items-center justify-between">
+              <button
+                key={wc.id}
+                onClick={() => navigate(`/worldcup/${wc.id}`)}
+                className="w-full rounded-xl border border-border bg-card px-4 py-3 flex items-center justify-between hover:bg-muted/30 transition-colors text-left"
+              >
                 <div>
                   <p className="text-sm font-medium">
                     {isChampion ? 'Campeón 🏆' : `Eliminado en ${STAGE_LABELS[wc.current_stage]}`}
@@ -279,6 +305,7 @@ export function Profile() {
                   <p className="text-xs text-muted-foreground">
                     {new Date(wc.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' })}
                     {wc.ended_at && ` – ${new Date(wc.ended_at).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' })}`}
+                    {statParts ? ` · ${statParts}` : ''}
                   </p>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded-full border ${
@@ -288,7 +315,7 @@ export function Profile() {
                 }`}>
                   {isChampion ? 'Ganado' : 'Eliminado'}
                 </span>
-              </div>
+              </button>
             )
           })
         )}

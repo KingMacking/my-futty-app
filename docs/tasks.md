@@ -106,6 +106,19 @@
 
 ---
 
+## 🔲 Step 14b — Pantalla de detalle del mundial
+
+- [ ] Nueva página `WorldcupDetail` en `/worldcup/:worldcupId`
+- [ ] Fetch: `worldcup_matches JOIN matches` para traer todos los partidos del mundial
+- [ ] Header: estado (activo/campeón/eliminado), etapa actual, fechas inicio–fin
+- [ ] Stats del mundial: PJ, V, E, D + goles y asistencias acumuladas (si existen)
+- [ ] Lista de partidos agrupados por etapa (grupos, octavos, etc.)
+- [ ] Cada fila: resultado (V/E/D), fecha, ⚽ goles 🎯 asistencias si los tiene
+- [ ] Ruta registrada en App.tsx
+- [ ] Historial de mundiales en `Profile` → cada fila es clickeable y navega al detalle
+
+---
+
 ## 🔲 Step 14 — Goles y asistencias en partidos
 
 - [ ] Agregar campos opcionales `goals` y `assists` al formulario de carga de partido (personal)

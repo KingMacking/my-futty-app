@@ -8,6 +8,7 @@ import { GroupDetail } from './pages/GroupDetail'
 import { JoinGroup } from './pages/JoinGroup'
 import { ProfileSetup } from './pages/ProfileSetup'
 import { Profile } from './pages/Profile'
+import { WorldcupDetail } from './pages/WorldcupDetail'
 import { PublicProfile } from './pages/PublicProfile'
 import { useAuthStore } from './store/authStore'
 import { useWorldcupStore } from './store/worldcupStore'
@@ -75,6 +76,7 @@ function AppContent() {
           <Route path="/join/:code" element={<JoinGroup />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:userId" element={<PublicProfile />} />
+          <Route path="/worldcup/:worldcupId" element={<WorldcupDetail />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
