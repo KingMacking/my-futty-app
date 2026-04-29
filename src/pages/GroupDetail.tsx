@@ -5,6 +5,7 @@ import { supabase } from '../services/supabase'
 import { useGroupsStore } from '../store/groupsStore'
 import { useAuthStore } from '../store/authStore'
 import { GroupMatchForm } from '../components/GroupMatchForm'
+import { TeamDrawModal } from '../components/TeamDrawModal'
 import type { Profile, Worldcup, GroupMatch, GroupMatchPlayer } from '../types'
 
 const STAGE_LABELS: Record<string, string> = {
@@ -53,6 +54,7 @@ export function GroupDetail() {
   const [matchesLoading, setMatchesLoading] = useState(false)
   const matchesLoaded = useRef(false)
   const [showMatchForm, setShowMatchForm] = useState(false)
+  const [showDraw, setShowDraw] = useState(false)
   const [confirmKick, setConfirmKick] = useState<string | null>(null)
   const profileMapRef = useRef<Record<string, Profile | null>>({})
 
@@ -289,6 +291,12 @@ export function GroupDetail() {
 
       {activeTab === 'members' && (
       <div className="flex flex-col gap-2">
+        <button
+          onClick={() => setShowDraw(true)}
+          className="flex items-center mb-2 justify-center gap-2 rounded-xl border border-dashed border-border py-3 text-sm text-muted-foreground hover:text-foreground hover:border-purple-500/50 transition-colors mt-1"
+        >
+          🎲 Sortear equipos
+        </button>
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           {loading ? 'Cargando...' : `${members.length} miembro${members.length !== 1 ? 's' : ''}`}
         </p>
@@ -415,6 +423,7 @@ export function GroupDetail() {
             )
           })
         )}
+        
       </div>
       )}
 
@@ -534,6 +543,13 @@ export function GroupDetail() {
             matchesLoaded.current = false
             loadMatches()
           }}
+        />
+      )}
+
+      {showDraw && (
+        <TeamDrawModal
+          members={members.map(m => ({ user_id: m.user_id, profile: m.profile }))}
+          onClose={() => setShowDraw(false)}
         />
       )}
     </div>
