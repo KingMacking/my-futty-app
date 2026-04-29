@@ -99,7 +99,7 @@ export function GroupMatchDetail() {
     year: 'numeric',
   })
 
-  function renderTeam(players: PlayerFull[], color: 'blue' | 'orange') {
+  function renderTeam(players: PlayerFull[]) {
     if (players.length === 0) {
       return <p className="text-sm text-muted-foreground italic">Sin jugadores registrados</p>
     }
@@ -196,7 +196,7 @@ export function GroupMatchDetail() {
             </span>
             {winA && <span className="text-xs text-muted-foreground">ganador</span>}
           </div>
-          {renderTeam(teamA, 'blue')}
+          {renderTeam(teamA)}
         </div>
 
         <div className="rounded-xl border border-border bg-card p-4 flex flex-col gap-3">
@@ -206,7 +206,7 @@ export function GroupMatchDetail() {
             </span>
             {winB && <span className="text-xs text-muted-foreground">ganador</span>}
           </div>
-          {renderTeam(teamB, 'orange')}
+          {renderTeam(teamB)}
         </div>
       </div>
     </div>

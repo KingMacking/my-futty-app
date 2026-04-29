@@ -122,7 +122,7 @@ export function GroupDetail() {
           ...m,
           players: (m.group_match_players ?? []).map(p => ({
             ...p,
-            profile: profileMapRef.current[p.user_id] ?? null,
+              profile: p.user_id ? (profileMapRef.current[p.user_id] ?? null) : null,
           })),
         }))
     )
