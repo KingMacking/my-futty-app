@@ -20,17 +20,31 @@ export function MatchForm() {
   const [showStats, setShowStats] = useState(false)
   const [goals, setGoals] = useState('')
   const [assists, setAssists] = useState('')
+  const [replayUrl, setReplayUrl] = useState('')
+  const [playedAt, setPlayedAt] = useState(() => {
+    const now = new Date()
+    return now.toISOString().slice(0, 16)
+  })
 
   async function handleSubmit() {
     if (!result || !session) return
     const g = showStats && goals !== '' ? parseInt(goals, 10) : null
     const a = showStats && assists !== '' ? parseInt(assists, 10) : null
-    const ok = await addMatch(session.user.id, result, countsForWorldcup, g, a)
+    const trimmedUrl = replayUrl.trim()
+    if (trimmedUrl && !/^https?:\/\/.+/.test(trimmedUrl)) {
+      const { toast } = await import('sonner')
+      toast.error('El link debe comenzar con http:// o https://')
+      return
+    }
+    const ok = await addMatch(session.user.id, result, countsForWorldcup, g, a, trimmedUrl || null, new Date(playedAt).toISOString())
     if (ok) {
       setResult(null)
       setGoals('')
       setAssists('')
       setShowStats(false)
+      setReplayUrl('')
+      const now = new Date()
+      setPlayedAt(now.toISOString().slice(0, 16))
     }
   }
 
@@ -104,6 +118,28 @@ export function MatchForm() {
           </div>
         </div>
       )}
+
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs text-muted-foreground">Fecha y hora del partido</label>
+        <input
+          type="datetime-local"
+          max={new Date().toISOString().slice(0, 16)}
+          value={playedAt}
+          onChange={e => setPlayedAt(e.target.value)}
+          className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs text-muted-foreground">Link de repetición (opcional)</label>
+        <input
+          type="url"
+          placeholder="https://..."
+          value={replayUrl}
+          onChange={e => setReplayUrl(e.target.value)}
+          className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
 
       <Button
         onClick={handleSubmit}

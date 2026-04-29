@@ -42,7 +42,7 @@ export function PublicProfile() {
         supabase.from('profiles').select('id, email, username, full_name').eq('id', userId).maybeSingle(),
         supabase.from('worldcups').select('*').eq('user_id', userId).in('status', ['active', 'eliminated', 'completed']).order('created_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('worldcups').select('*').eq('user_id', userId).in('status', ['eliminated', 'completed']).order('created_at', { ascending: false }),
-        supabase.from('matches').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
+        supabase.from('matches').select('*').eq('user_id', userId).order('played_at', { ascending: false }),
       ])
 
       setProfile(profileData as Profile ?? null)

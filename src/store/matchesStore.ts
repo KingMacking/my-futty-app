@@ -8,7 +8,7 @@ interface MatchesState {
   loading: boolean
   submitting: boolean
   fetch: (userId: string) => Promise<void>
-  addMatch: (userId: string, result: MatchResult, countsForWorldcup: boolean, goals?: number | null, assists?: number | null) => Promise<boolean>
+  addMatch: (userId: string, result: MatchResult, countsForWorldcup: boolean, goals?: number | null, assists?: number | null, replayUrl?: string | null, playedAt?: string | null) => Promise<boolean>
 }
 
 export const useMatchesStore = create<MatchesState>((set, get) => ({
@@ -22,7 +22,7 @@ export const useMatchesStore = create<MatchesState>((set, get) => ({
       .from('matches')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+      .order('played_at', { ascending: false })
 
     if (error) {
       toast.error('Error cargando partidos')
@@ -32,11 +32,12 @@ export const useMatchesStore = create<MatchesState>((set, get) => ({
     set({ loading: false })
   },
 
-  addMatch: async (userId, result, countsForWorldcup, goals, assists) => {
+  addMatch: async (userId, result, countsForWorldcup, goals, assists, replayUrl, playedAt) => {
     set({ submitting: true })
+    const trimmedUrl = replayUrl?.trim() || null
     const { data, error } = await supabase
       .from('matches')
-      .insert({ user_id: userId, result, counts_for_worldcup: countsForWorldcup, goals: goals ?? null, assists: assists ?? null })
+      .insert({ user_id: userId, result, counts_for_worldcup: countsForWorldcup, goals: goals ?? null, assists: assists ?? null, replay_url: trimmedUrl, played_at: playedAt ?? new Date().toISOString() })
       .select()
       .single()
 

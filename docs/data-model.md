@@ -49,6 +49,7 @@
 - id
 - group_id
 - user_id
+- role (text, 'member' | 'admin', default 'member')
 
 ---
 
@@ -69,7 +70,8 @@
 
 - id
 - group_match_id
-- user_id
+- user_id (uuid, nullable — null para jugadores externos)
+- guest_name (text, nullable — nombre del jugador externo)
 - team ('a' | 'b')
 - goals (integer, default 0)
 - assists (integer, default 0)

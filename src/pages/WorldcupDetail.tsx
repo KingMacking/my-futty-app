@@ -48,7 +48,7 @@ export function WorldcupDetail() {
       setWorldcup(wcData as Worldcup ?? null)
       const mapped = ((wmData ?? []) as unknown as { stage: string; matches: Match }[])
         .map(row => ({ ...row.matches, stage: row.stage }))
-        .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+        .sort((a, b) => new Date(a.played_at ?? a.created_at).getTime() - new Date(b.played_at ?? b.created_at).getTime())
       setWcMatches(mapped)
       setLoading(false)
     }

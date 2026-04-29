@@ -9,7 +9,7 @@ const RESULT_CONFIG = {
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('es-AR', {
-    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+    day: 'numeric', month: 'short',
   })
 }
 
@@ -46,8 +46,19 @@ export function MatchList({ matches, loading }: Props) {
               {match.counts_for_worldcup && (
                 <span className="text-xs text-muted-foreground">🌍 Mundial</span>
               )}
+              {match.replay_url && (
+                <a
+                  href={match.replay_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                >
+                  🎬
+                </a>
+              )}
             </div>
-            <span className="text-xs text-muted-foreground">{formatDate(match.created_at)}</span>
+            <span className="text-xs text-muted-foreground">{formatDate(match.played_at ?? match.created_at)}</span>
           </div>
         )
       })}

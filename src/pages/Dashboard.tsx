@@ -18,12 +18,15 @@ export function Dashboard() {
 
   if (!worldcup) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
         <span className="text-4xl">⚽</span>
         <p className="font-semibold">No hay mundial activo</p>
         <p className="text-sm text-muted-foreground">
-          Registrá un partido con "Cuenta para mi mundial" para arrancar.
+          Arrancá un nuevo mundial o registrá un partido con "Cuenta para mi mundial".
         </p>
+        <Button onClick={() => session && createNew(session.user.id)}>
+          ⚽ Nuevo Mundial
+        </Button>
       </div>
     )
   }

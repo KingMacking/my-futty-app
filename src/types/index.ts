@@ -21,6 +21,8 @@ export interface Match {
   counts_for_worldcup: boolean
   goals: number | null
   assists: number | null
+  replay_url: string | null
+  played_at: string
   created_at: string
 }
 
@@ -33,11 +35,35 @@ export interface Group {
   member_count?: number
 }
 
+export type GroupMemberRole = 'member' | 'admin'
+
 export interface GroupMember {
   id: string
   group_id: string
   user_id: string
   joined_at: string
+  role: GroupMemberRole
+}
+
+export interface GroupMatch {
+  id: string
+  group_id: string
+  team_a_score: number
+  team_b_score: number
+  replay_url: string | null
+  played_at: string
+  created_by: string
+  created_at: string
+}
+
+export interface GroupMatchPlayer {
+  id: string
+  group_match_id: string
+  user_id: string | null
+  guest_name: string | null
+  team: 'a' | 'b'
+  goals: number
+  assists: number
 }
 
 export interface Profile {

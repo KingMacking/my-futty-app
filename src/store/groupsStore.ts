@@ -78,8 +78,8 @@ export const useGroupsStore = create<GroupsState>((set, get) => ({
       return false
     }
 
-    // Auto-unirse al grupo creado
-    await supabase.from('group_members').insert({ group_id: data.id, user_id: userId })
+    // Auto-unirse al grupo creado como admin
+    await supabase.from('group_members').insert({ group_id: data.id, user_id: userId, role: 'admin' })
 
     const newGroup: Group = { ...data, member_count: 1 }
     set({ groups: [newGroup, ...get().groups], submitting: false })

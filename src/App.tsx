@@ -10,6 +10,7 @@ import { ProfileSetup } from './pages/ProfileSetup'
 import { Profile } from './pages/Profile'
 import { WorldcupDetail } from './pages/WorldcupDetail'
 import { PublicProfile } from './pages/PublicProfile'
+import { GroupMatchDetail } from './pages/GroupMatchDetail'
 import { useAuthStore } from './store/authStore'
 import { useWorldcupStore } from './store/worldcupStore'
 
@@ -73,6 +74,7 @@ function AppContent() {
           <Route path="/matches" element={<Matches />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/groups/:id" element={<GroupDetail />} />
+          <Route path="/groups/:groupId/matches/:matchId" element={<GroupMatchDetail />} />
           <Route path="/join/:code" element={<JoinGroup />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:userId" element={<PublicProfile />} />

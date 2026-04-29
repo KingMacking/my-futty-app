@@ -130,25 +130,35 @@
 
 ---
 
-## 🔲 Step 15 — Partidos de grupo
+## ✅ Step 15 — Partidos de grupo
 
-- [ ] SQL: nueva tabla `group_matches` (id, group_id, team_a_score, team_b_score, played_at, replay_url)
-- [ ] SQL: nueva tabla `group_match_players` (id, group_match_id, user_id, team ('a'|'b'), goals, assists)
-- [ ] UI: botón "Nuevo partido" en el detalle del grupo
-- [ ] Formulario: seleccionar participantes del grupo y asignarlos a equipo A o B
-- [ ] Formulario: ingresar resultado (score equipo A vs equipo B)
-- [ ] Formulario: campo opcional para link de repetición
-- [ ] Reemplazar el activity feed actual por el feed de partidos de grupo
-- [ ] Feed: mostrar cada partido con equipos, resultado, fecha y jugadores
-- [ ] Los partidos de grupo NO están vinculados a partidos personales ni a mundiales
+- [x] SQL: nueva tabla `group_matches` (id, group_id, team_a_score, team_b_score, played_at, replay_url)
+- [x] SQL: nueva tabla `group_match_players` (id, group_match_id, user_id, team ('a'|'b'), goals, assists)
+- [x] SQL: agregar `role` ('member'|'admin') a `group_members` — ver migration en data-model.md
+- [x] Roles: creador del grupo se inserta como 'admin'; puede dar/quitar admin a otros miembros
+- [x] Roles: solo creador puede expulsar miembros y gestionar roles
+- [x] UI: botón "Nuevo partido" en el detalle del grupo (visible solo para admins/creador)
+- [x] Formulario: seleccionar participantes del grupo y asignarlos a equipo A o B
+- [x] Formulario: ingresar resultado (score equipo A vs equipo B)
+- [x] Formulario: goles/asistencias opcionales por jugador
+- [x] Formulario: campo opcional para link de repetición (con validación de URL)
+- [x] Tab "Partidos" reemplaza el tab "Actividad" en el detalle del grupo
+- [x] Feed: mostrar cada partido con score, equipos, jugadores, stats y fecha
+- [x] Feed: mostrar link de repetición si existe
+- [x] Miembros: badge "creador" y badge "admin" en la lista
+- [x] Miembros: botón de expulsar con confirmación (solo creador)
+- [x] Miembros: botón ★ para dar/quitar admin (solo creador)
+- [x] Los partidos de grupo NO están vinculados a partidos personales ni a mundiales
 
 ---
 
-## 🔲 Step 16 — Link de repetición
+## ✅ Step 16 — Link de repetición
 
-- [ ] Agregar campo opcional `replay_url` al formulario de partido personal
-- [ ] Guardar en `matches` (campo nullable)
-- [ ] Mostrar link en historial de partidos del perfil si existe
+- [x] Agregar campo opcional `replay_url` al formulario de partido personal (con validación de URL)
+- [x] Guardar en `matches` (campo nullable)
+- [x] Mostrar link 🎬 en historial de partidos si existe
+
+---
 - [ ] (Ya incluido en partidos de grupo en Step 15)
 
 ---
