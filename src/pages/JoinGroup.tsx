@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { supabase } from '../services/supabase'
 import { useGroupsStore } from '../store/groupsStore'
@@ -31,16 +32,12 @@ export function JoinGroup() {
       })
   }, [code])
 
-  // Limpiar código pendiente si llegamos acá ya logueados
-  useEffect(() => {
-    localStorage.removeItem('pendingJoinCode')
-  }, [])
-
   async function handleJoin() {
     if (!session || !code) return
     setJoining(true)
     const ok = await join(session.user.id, code)
     if (ok && group) {
+      localStorage.removeItem('pendingJoinCode')
       const joined = groups.find(g => g.code === code.toUpperCase())
       navigate(joined ? `/groups/${joined.id}` : '/groups')
     } else {
@@ -70,16 +67,11 @@ export function JoinGroup() {
 
   if (alreadyMember) {
     const existing = groups.find(g => g.code === code?.toUpperCase())
-    return (
-      <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
-        <span className="text-4xl">👥</span>
-        <p className="font-semibold">Ya sos miembro de este grupo</p>
-        <p className="text-muted-foreground text-sm">{group.name}</p>
-        <Button onClick={() => navigate(existing ? `/groups/${existing.id}` : '/groups')}>
-          Ver grupo
-        </Button>
-      </div>
-    )
+    const target = existing ? `/groups/${existing.id}` : '/groups'
+    localStorage.removeItem('pendingJoinCode')
+    toast('Ya sos miembro de este grupo')
+    navigate(target, { replace: true })
+    return null
   }
 
   return (
@@ -93,7 +85,7 @@ export function JoinGroup() {
       <Button className="w-full max-w-xs" onClick={handleJoin} disabled={joining}>
         {joining ? 'Uniéndose...' : 'Unirse al grupo'}
       </Button>
-      <button onClick={() => navigate('/groups')} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+      <button onClick={() => { localStorage.removeItem('pendingJoinCode'); navigate('/groups') }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
         Cancelar
       </button>
     </div>
