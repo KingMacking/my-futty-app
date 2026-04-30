@@ -58,7 +58,10 @@ function AppContent() {
   // Redirigir a join si hay código pendiente
   useEffect(() => {
     const code = localStorage.getItem('pendingJoinCode')
-    if (code) navigate(`/join/${code}`, { replace: true })
+    if (code) {
+      localStorage.removeItem('pendingJoinCode')
+      navigate(`/join/${code}`, { replace: true })
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
