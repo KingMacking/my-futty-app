@@ -11,7 +11,7 @@ export function JoinGroup() {
   const { code } = useParams<{ code: string }>()
   const navigate = useNavigate()
   const { session } = useAuthStore()
-  const { groups, join } = useGroupsStore()
+  const { groups, join, loading: groupsLoading } = useGroupsStore()
 
   const [group, setGroup] = useState<Group | null>(null)
   const [loading, setLoading] = useState(true)
@@ -45,7 +45,7 @@ export function JoinGroup() {
     }
   }
 
-  if (loading) {
+  if (loading || groupsLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-3">
         <div className="w-12 h-12 rounded-full bg-muted animate-pulse" />
