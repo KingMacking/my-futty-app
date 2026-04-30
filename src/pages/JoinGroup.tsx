@@ -11,41 +11,70 @@ export function JoinGroup() {
   const { code } = useParams<{ code: string }>()
   const navigate = useNavigate()
   const { session } = useAuthStore()
-  const { groups, join, loading: groupsLoading } = useGroupsStore()
+  const { join } = useGroupsStore()
 
   const [group, setGroup] = useState<Group | null>(null)
   const [loading, setLoading] = useState(true)
   const [joining, setJoining] = useState(false)
 
-  const alreadyMember = groups.some(g => g.code === code?.toUpperCase())
-
   useEffect(() => {
-    if (!code) return
-    supabase
-      .from('groups')
-      .select('*')
-      .eq('code', code.toUpperCase())
-      .maybeSingle()
-      .then(({ data }) => {
-        setGroup(data as Group ?? null)
+    if (!code || !session) return
+
+    const upperCode = code.toUpperCase()
+    let cancelled = false
+
+    async function check() {
+      const { data: groupData } = await supabase
+        .from('groups')
+        .select('*')
+        .eq('code', upperCode)
+        .maybeSingle()
+
+      if (cancelled) return
+
+      if (!groupData) {
         setLoading(false)
-      })
-  }, [code])
+        return
+      }
+
+      const { data: membership } = await supabase
+        .from('group_members')
+        .select('group_id')
+        .eq('user_id', session!.user.id)
+        .eq('group_id', groupData.id)
+        .maybeSingle()
+
+      if (cancelled) return
+
+      if (membership) {
+        localStorage.removeItem('pendingJoinCode')
+        toast('Ya sos miembro de este grupo')
+        navigate(`/groups/${groupData.id}`, { replace: true })
+        return
+      }
+
+      setGroup(groupData as Group)
+      setLoading(false)
+    }
+
+    check()
+    return () => { cancelled = true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code, session?.user.id])
 
   async function handleJoin() {
-    if (!session || !code) return
+    if (!session || !code || !group) return
     setJoining(true)
     const ok = await join(session.user.id, code)
-    if (ok && group) {
+    if (ok) {
       localStorage.removeItem('pendingJoinCode')
-      const joined = groups.find(g => g.code === code.toUpperCase())
-      navigate(joined ? `/groups/${joined.id}` : '/groups')
+      navigate(`/groups/${group.id}`)
     } else {
       setJoining(false)
     }
   }
 
-  if (loading || groupsLoading) {
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-3">
         <div className="w-12 h-12 rounded-full bg-muted animate-pulse" />
@@ -63,15 +92,6 @@ export function JoinGroup() {
         <Button variant="outline" onClick={() => navigate('/groups')}>Ir a grupos</Button>
       </div>
     )
-  }
-
-  if (alreadyMember) {
-    const existing = groups.find(g => g.code === code?.toUpperCase())
-    const target = existing ? `/groups/${existing.id}` : '/groups'
-    localStorage.removeItem('pendingJoinCode')
-    toast('Ya sos miembro de este grupo')
-    navigate(target, { replace: true })
-    return null
   }
 
   return (
