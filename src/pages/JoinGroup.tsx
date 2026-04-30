@@ -33,7 +33,7 @@ export function JoinGroup() {
 
   // Limpiar código pendiente si llegamos acá ya logueados
   useEffect(() => {
-    sessionStorage.removeItem('pendingJoinCode')
+    localStorage.removeItem('pendingJoinCode')
   }, [])
 
   async function handleJoin() {

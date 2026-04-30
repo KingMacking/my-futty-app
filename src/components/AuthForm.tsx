@@ -17,9 +17,13 @@ export function AuthForm() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) toast.error(error.message)
     } else {
-      const { error } = await supabase.auth.signUp({ email, password })
+      const pendingCode = localStorage.getItem('pendingJoinCode')
+      const redirectTo = pendingCode
+        ? `${window.location.origin}/join/${pendingCode}`
+        : window.location.origin
+      const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: redirectTo } })
       if (error) toast.error(error.message)
-      else toast.success('Cuenta creada. Podés iniciar sesión.')
+      else toast.success('Revisá tu mail para confirmar tu cuenta.')
     }
 
     setLoading(false)
