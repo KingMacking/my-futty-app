@@ -64,7 +64,9 @@ export const useGroupsStore = create<GroupsState>((set, get) => ({
 
   create: async (userId: string, name: string) => {
     set({ submitting: true })
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase()
+    const array = new Uint8Array(4)
+    crypto.getRandomValues(array)
+    const code = Array.from(array, b => b.toString(36).padStart(2, '0')).join('').substring(0, 6).toUpperCase()
 
     const { data, error } = await supabase
       .from('groups')

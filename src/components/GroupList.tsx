@@ -10,8 +10,10 @@ export function GroupList({ groups }: Props) {
 
   if (groups.length === 0) {
     return (
-      <div className="text-center py-10 text-muted-foreground text-sm">
-        No pertenecés a ningún grupo todavía.
+      <div className="text-center py-12 flex flex-col items-center gap-2">
+        <p className="text-3xl">👥</p>
+        <p className="font-semibold">Sin grupos todavía</p>
+        <p className="text-sm text-muted-foreground">Creá uno nuevo o uníte con un código</p>
       </div>
     )
   }

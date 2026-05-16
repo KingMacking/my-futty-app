@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { useAuthStore } from '../store/authStore'
 
 export function ProfileSetup() {
@@ -42,8 +43,7 @@ export function ProfileSetup() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">Nombre real</label>
-            <input
-              className="bg-muted/50 border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:border-blue-500 transition-colors"
+            <Input
               placeholder="Ej: Juan Pérez"
               value={fullName}
               onChange={e => setFullName(e.target.value)}
@@ -53,16 +53,13 @@ export function ProfileSetup() {
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">Nickname</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
-              <input
-                className="w-full bg-muted/50 border border-border rounded-lg pl-7 pr-3 py-2.5 text-sm outline-none focus:border-blue-500 transition-colors"
-                placeholder="juanito10"
-                value={username}
-                onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                maxLength={20}
-              />
-            </div>
+            <Input
+              prefix="@"
+              placeholder="juanito10"
+              value={username}
+              onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+              maxLength={20}
+            />
             <p className="text-xs text-muted-foreground">3-20 caracteres: letras minúsculas, números o _</p>
           </div>
 

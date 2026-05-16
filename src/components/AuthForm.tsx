@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { supabase } from '../services/supabase'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export function AuthForm() {
   const [email, setEmail] = useState('')
@@ -29,8 +30,6 @@ export function AuthForm() {
     setLoading(false)
   }
 
-  const inputClass = 'bg-input/30 border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-ring transition-colors w-full'
-
   return (
     <div className="flex flex-col items-center justify-center min-h-dvh gap-3 px-4">
       <h1 className="text-5xl">⚽</h1>
@@ -40,22 +39,20 @@ export function AuthForm() {
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-full max-w-sm">
-        <input
+        <Input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className={inputClass}
         />
-        <input
+        <Input
           type="password"
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
-          className={inputClass}
         />
         <Button type="submit" disabled={loading} className="w-full">
           {loading ? 'Cargando...' : isLogin ? 'Entrar' : 'Registrarme'}

@@ -1,25 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../services/supabase'
+import { STAGE_LABELS, STAGE_ORDER, RESULT_STYLE } from '../constants/worldcup'
 import type { Match, Worldcup } from '../types'
-
-const STAGE_LABELS: Record<string, string> = {
-  groups:        'Fase de Grupos',
-  round_of_16:   'Octavos',
-  quarterfinals: 'Cuartos',
-  semifinals:    'Semifinal',
-  final:         'Final',
-}
-
-const STAGE_ORDER: Record<string, number> = {
-  groups: 1, round_of_16: 2, quarterfinals: 3, semifinals: 4, final: 5,
-}
-
-const RESULT_STYLE: Record<string, { icon: string; className: string }> = {
-  win:  { icon: 'V', className: 'text-green-400 bg-green-950/50 border-green-800/40' },
-  draw: { icon: 'E', className: 'text-yellow-400 bg-yellow-950/50 border-yellow-800/40' },
-  lose: { icon: 'D', className: 'text-red-400 bg-red-950/50 border-red-800/40' },
-}
 
 interface WorldcupMatch extends Match {
   stage: string

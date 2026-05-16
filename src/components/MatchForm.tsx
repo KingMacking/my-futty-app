@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useMatchesStore } from '../store/matchesStore'
 import { useAuthStore } from '../store/authStore'
@@ -94,26 +95,26 @@ export function MatchForm() {
         <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
             <label className="text-xs text-muted-foreground">Goles ⚽</label>
-            <input
+            <Input
               type="number"
               min="0"
               max="99"
               placeholder="0"
               value={goals}
               onChange={e => setGoals(e.target.value)}
-              className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors text-center"
+              className="text-center"
             />
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-xs text-muted-foreground">Asistencias 🎯</label>
-            <input
+            <Input
               type="number"
               min="0"
               max="99"
               placeholder="0"
               value={assists}
               onChange={e => setAssists(e.target.value)}
-              className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors text-center"
+              className="text-center"
             />
           </div>
         </div>
@@ -121,23 +122,21 @@ export function MatchForm() {
 
       <div className="flex flex-col gap-1.5">
         <label className="text-xs text-muted-foreground">Fecha y hora del partido</label>
-        <input
+        <Input
           type="datetime-local"
           max={new Date().toISOString().slice(0, 16)}
           value={playedAt}
           onChange={e => setPlayedAt(e.target.value)}
-          className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
         <label className="text-xs text-muted-foreground">Link de repetición (opcional)</label>
-        <input
+        <Input
           type="url"
           placeholder="https://..."
           value={replayUrl}
           onChange={e => setReplayUrl(e.target.value)}
-          className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
         />
       </div>
 

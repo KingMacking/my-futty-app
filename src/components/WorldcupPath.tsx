@@ -9,12 +9,24 @@ const STAGES: { key: string; label: string; shortLabel: string; emoji: string }[
   { key: 'final',         label: 'Final',            shortLabel: 'Final',    emoji: '🏆' },
 ]
 
+function durationDays(start: string, end: string | null) {
+  if (!end) return null
+  const diff = new Date(end).getTime() - new Date(start).getTime()
+  const days = Math.round(diff / 86_400_000)
+  if (days === 0) return 'hoy'
+  if (days === 1) return '1 día'
+  return `${days} días`
+}
+
 interface Props {
   worldcup: Worldcup
 }
 
 export function WorldcupPath({ worldcup }: Props) {
   const currentIndex = STAGES.findIndex(s => s.key === worldcup.current_stage)
+  const duration = durationDays(worldcup.created_at, worldcup.ended_at)
+  const stagesReached = currentIndex // 0 = groups, 4 = final
+  const groupTotal = worldcup.group_wins + worldcup.group_draws + worldcup.group_losses
 
   if (worldcup.status === 'eliminated') {
     const stage = STAGES.find(s => s.key === worldcup.current_stage)
@@ -26,6 +38,22 @@ export function WorldcupPath({ worldcup }: Props) {
           <p className="text-muted-foreground text-sm">
             Quedaste en <span className="text-foreground font-semibold">{stage?.label}</span>
           </p>
+          {stagesReached > 0 && (
+            <p className="text-sm text-muted-foreground mt-1">
+              Pasaste <span className="text-foreground font-semibold">{stagesReached}</span> fase{stagesReached !== 1 ? 's' : ''}
+            </p>
+          )}
+          {groupTotal > 0 && (
+            <div className="flex justify-center gap-3 mt-4 text-xs">
+              <span className="text-green-400">{worldcup.group_wins}V</span>
+              <span className="text-yellow-400">{worldcup.group_draws}E</span>
+              <span className="text-red-400">{worldcup.group_losses}D</span>
+              <span className="text-muted-foreground">en grupos</span>
+            </div>
+          )}
+          {duration && (
+            <p className="text-xs text-muted-foreground mt-2">Duración: {duration}</p>
+          )}
           <p className="text-muted-foreground text-xs mt-3">
             Registrá un partido con "Cuenta para mi mundial" para arrancar uno nuevo
           </p>
@@ -39,9 +67,20 @@ export function WorldcupPath({ worldcup }: Props) {
     return (
       <div className="flex flex-col gap-4">
         <div className="rounded-2xl border border-yellow-500/40 bg-yellow-950/20 p-6 text-center">
-          <p className="text-5xl mb-3">🏆</p>
-          <h2 className="text-xl font-bold mb-1">¡Campeón del Mundo!</h2>
-          <p className="text-muted-foreground text-sm">Completaste el mundial. ¡Sos un crack!</p>
+          <p className="text-6xl mb-3">🏆</p>
+          <h2 className="text-2xl font-bold mb-1">¡Campeón del Mundo!</h2>
+          <p className="text-yellow-300/80 text-sm font-medium">Completaste todas las fases. Sos un crack.</p>
+          {groupTotal > 0 && (
+            <div className="flex justify-center gap-3 mt-4 text-xs">
+              <span className="text-green-400">{worldcup.group_wins}V</span>
+              <span className="text-yellow-400">{worldcup.group_draws}E</span>
+              <span className="text-red-400">{worldcup.group_losses}D</span>
+              <span className="text-muted-foreground">en grupos</span>
+            </div>
+          )}
+          {duration && (
+            <p className="text-xs text-muted-foreground mt-2">Mundial completado en {duration}</p>
+          )}
           <p className="text-muted-foreground text-xs mt-3">
             Registrá un partido para arrancar un nuevo mundial
           </p>
@@ -52,7 +91,7 @@ export function WorldcupPath({ worldcup }: Props) {
   }
 
   const grouped = worldcup.current_stage === 'groups'
-  const total = worldcup.group_wins + worldcup.group_draws + worldcup.group_losses
+  const total = groupTotal
   const remaining = 3 - total
 
   return (

@@ -6,15 +6,8 @@ import { useGroupsStore } from '../store/groupsStore'
 import { useAuthStore } from '../store/authStore'
 import { GroupMatchForm } from '../components/GroupMatchForm'
 import { TeamDrawModal } from '../components/TeamDrawModal'
+import { STAGE_LABELS } from '../constants/worldcup'
 import type { Profile, Worldcup, GroupMatch, GroupMatchPlayer } from '../types'
-
-const STAGE_LABELS: Record<string, string> = {
-  groups:         'Fase de Grupos',
-  round_of_16:    'Octavos',
-  quarterfinals:  'Cuartos',
-  semifinals:     'Semifinal',
-  final:          'Final',
-}
 
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   active:     { label: '',           className: '' },

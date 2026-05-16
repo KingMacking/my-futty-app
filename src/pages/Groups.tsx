@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { GroupList } from '../components/GroupList'
 import { useGroupsStore } from '../store/groupsStore'
 import { useAuthStore } from '../store/authStore'
@@ -43,8 +44,7 @@ export function Groups() {
       {mode === 'create' && (
         <div className="rounded-xl border border-border bg-card p-4 flex flex-col gap-3">
           <p className="font-semibold text-sm">Nuevo grupo</p>
-          <input
-            className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
+          <Input
             placeholder="Nombre del grupo"
             value={name}
             onChange={e => setName(e.target.value)}
@@ -63,13 +63,13 @@ export function Groups() {
       {mode === 'join' && (
         <div className="rounded-xl border border-border bg-card p-4 flex flex-col gap-3">
           <p className="font-semibold text-sm">Unirse con código</p>
-          <input
-            className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm uppercase tracking-widest outline-none focus:border-blue-500 transition-colors"
+          <Input
             placeholder="Código (ej: AB3X9F)"
             value={code}
             onChange={e => setCode(e.target.value.toUpperCase())}
             onKeyDown={e => e.key === 'Enter' && handleJoin()}
             maxLength={6}
+            className="uppercase tracking-widest"
             autoFocus
           />
           <div className="flex gap-2">

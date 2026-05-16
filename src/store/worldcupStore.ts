@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { toast } from 'sonner'
 import { supabase } from '../services/supabase'
 import { calcTransition, buildWorldcupUpdate, getNextStage } from '../services/worldcupLogic'
+import { STAGE_LABELS } from '../constants/worldcup'
 import type { Worldcup, MatchResult } from '../types'
 
 interface WorldcupState {
@@ -126,13 +127,7 @@ export const useWorldcupStore = create<WorldcupState>((set, get) => ({
     set({ worldcup: data as Worldcup })
 
     if (transition.type === 'advance') {
-      const labels: Record<string, string> = {
-        round_of_16: 'Octavos de Final',
-        quarterfinals: 'Cuartos de Final',
-        semifinals: 'Semifinal',
-        final: 'Final',
-      }
-      toast.success(`¡Clasificaste! Avanzás a ${labels[transition.nextStage]} 🎉`)
+      toast.success(`¡Clasificaste! Avanzás a ${STAGE_LABELS[transition.nextStage]} 🎉`)
     } else if (transition.type === 'completed') {
       toast.success('¡Campeón del Mundo! 🏆')
     } else if (transition.type === 'eliminated') {
@@ -156,13 +151,7 @@ export const useWorldcupStore = create<WorldcupState>((set, get) => ({
       const next = getNextStage(worldcup.current_stage)
       if (next) {
         update = { current_stage: next }
-        const labels: Record<string, string> = {
-          round_of_16: 'Octavos de Final',
-          quarterfinals: 'Cuartos de Final',
-          semifinals: 'Semifinal',
-          final: 'Final',
-        }
-        toast.success(`¡Ganaste la moneda! Avanzás a ${labels[next]} 🎉`)
+        toast.success(`¡Ganaste la moneda! Avanzás a ${STAGE_LABELS[next]} 🎉`)
       } else {
         update = { status: 'completed', ended_at: new Date().toISOString() }
         toast.success('¡Campeón del Mundo! 🏆')

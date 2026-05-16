@@ -2,18 +2,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { useAuthStore } from '../store/authStore'
 import { useMatchesStore } from '../store/matchesStore'
 import { supabase } from '../services/supabase'
+import { STAGE_LABELS, STAGE_LABELS_SHORT, STAGE_ORDER } from '../constants/worldcup'
 import type { Worldcup } from '../types'
-
-const STAGE_LABELS: Record<string, string> = {
-  groups:        'Fase de Grupos',
-  round_of_16:   'Octavos',
-  quarterfinals: 'Cuartos',
-  semifinals:    'Semifinal',
-  final:         'Final',
-}
 
 export function Profile() {
   const { session, profile, saveProfile, signOut } = useAuthStore()
@@ -117,18 +111,12 @@ export function Profile() {
   })()
 
   // -- Stats de mundiales --
-  const STAGE_ORDER: Record<string, number> = {
-    groups: 1, round_of_16: 2, quarterfinals: 3, semifinals: 4, final: 5,
-  }
-  const STAGE_SHORT: Record<string, string> = {
-    groups: 'Grupos', round_of_16: 'Octavos', quarterfinals: 'Cuartos', semifinals: 'Semis', final: 'Final',
-  }
   const totalWorldcups = history.length
   const wonWorldcups   = history.filter(w => w.status === 'completed').length
   const classifiedCount = history.filter(w => STAGE_ORDER[w.current_stage] > 1 || w.status === 'completed').length
   const classificationRate = totalWorldcups > 0 ? Math.round((classifiedCount / totalWorldcups) * 100) : 0
   const bestStage = history.length > 0
-    ? STAGE_SHORT[history.reduce((best, w) =>
+    ? STAGE_LABELS_SHORT[history.reduce((best, w) =>
         STAGE_ORDER[w.current_stage] > STAGE_ORDER[best.current_stage] ? w : best
       ).current_stage]
     : '—'
@@ -244,8 +232,7 @@ export function Profile() {
           <p className="font-semibold text-sm">Editar perfil</p>
           <div className="flex flex-col gap-1.5">
             <label className="text-xs text-muted-foreground">Nombre real</label>
-            <input
-              className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
+            <Input
               value={fullName}
               onChange={e => setFullName(e.target.value)}
               autoFocus
@@ -253,15 +240,12 @@ export function Profile() {
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-xs text-muted-foreground">Nickname</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
-              <input
-                className="w-full bg-muted/50 border border-border rounded-lg pl-7 pr-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
-                value={username}
-                onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                maxLength={20}
-              />
-            </div>
+            <Input
+              prefix="@"
+              value={username}
+              onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+              maxLength={20}
+            />
           </div>
           <div className="flex gap-2">
             <Button className="flex-1" onClick={handleSave} disabled={saving || !fullName.trim() || username.length < 3}>

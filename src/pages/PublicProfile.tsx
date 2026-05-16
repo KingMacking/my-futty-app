@@ -1,22 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../services/supabase'
+import { STAGE_LABELS, STAGE_LABELS_SHORT, STAGE_ORDER } from '../constants/worldcup'
 import type { Match, Profile, Worldcup } from '../types'
-
-const STAGE_LABELS: Record<string, string> = {
-  groups:        'Fase de Grupos',
-  round_of_16:   'Octavos',
-  quarterfinals: 'Cuartos',
-  semifinals:    'Semifinal',
-  final:         'Final',
-}
-
-const STAGE_ORDER: Record<string, number> = {
-  groups: 1, round_of_16: 2, quarterfinals: 3, semifinals: 4, final: 5,
-}
-const STAGE_SHORT: Record<string, string> = {
-  groups: 'Grupos', round_of_16: 'Octavos', quarterfinals: 'Cuartos', semifinals: 'Semis', final: 'Final',
-}
 
 export function PublicProfile() {
   const { userId } = useParams<{ userId: string }>()
@@ -122,7 +108,7 @@ export function PublicProfile() {
   const classifiedCount = history.filter(w => STAGE_ORDER[w.current_stage] > 1 || w.status === 'completed').length
   const classificationRate = totalWorldcups > 0 ? Math.round((classifiedCount / totalWorldcups) * 100) : 0
   const bestStage = history.length > 0
-    ? STAGE_SHORT[history.reduce((best, w) =>
+    ? STAGE_LABELS_SHORT[history.reduce((best, w) =>
         STAGE_ORDER[w.current_stage] > STAGE_ORDER[best.current_stage] ? w : best
       ).current_stage]
     : '—'

@@ -2,6 +2,7 @@
 import { toast } from 'sonner'
 import { supabase } from '../services/supabase'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import type { Profile } from '../types'
 
 interface MemberItem {
@@ -170,14 +171,14 @@ export function GroupMatchForm({ groupId, currentUserId, members, onClose, onCre
           <div className="flex items-center gap-3">
             <div className="flex-1 flex flex-col gap-1">
               <label className="text-xs text-muted-foreground text-center">Equipo A</label>
-              <input type="number" min="0" max="99" placeholder="0" value={scoreA} onChange={e => setScoreA(e.target.value)}
-                className="bg-muted/50 border border-border rounded-lg px-3 py-2.5 text-center text-2xl font-bold outline-none focus:border-blue-500 transition-colors" />
+              <Input type="number" min="0" max="99" placeholder="0" value={scoreA} onChange={e => setScoreA(e.target.value)}
+                className="text-center text-2xl font-bold py-2.5" />
             </div>
             <span className="text-muted-foreground text-xl font-bold mt-5">-</span>
             <div className="flex-1 flex flex-col gap-1">
               <label className="text-xs text-muted-foreground text-center">Equipo B</label>
-              <input type="number" min="0" max="99" placeholder="0" value={scoreB} onChange={e => setScoreB(e.target.value)}
-                className="bg-muted/50 border border-border rounded-lg px-3 py-2.5 text-center text-2xl font-bold outline-none focus:border-blue-500 transition-colors" />
+              <Input type="number" min="0" max="99" placeholder="0" value={scoreB} onChange={e => setScoreB(e.target.value)}
+                className="text-center text-2xl font-bold py-2.5" />
             </div>
           </div>
         </div>
@@ -234,9 +235,9 @@ export function GroupMatchForm({ groupId, currentUserId, members, onClose, onCre
               </div>
             ))}
             <div className="flex gap-2 mt-1">
-              <input type="text" placeholder="Nombre del invitado..." value={guestInput}
+              <Input type="text" placeholder="Nombre del invitado..." value={guestInput}
                 onChange={e => setGuestInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addGuest()} maxLength={40}
-                className="flex-1 bg-muted/50 border border-dashed border-border rounded-lg px-3 py-1.5 text-sm outline-none focus:border-green-500/50 transition-colors placeholder:text-muted-foreground/50" />
+                className="flex-1 border-dashed focus:border-green-500/50 placeholder:text-muted-foreground/50" />
               <button onClick={addGuest} disabled={!guestInput.trim()}
                 className="text-xs px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:border-green-500/50 hover:text-green-400 transition-colors disabled:opacity-40">
                 + Agregar
@@ -264,12 +265,12 @@ export function GroupMatchForm({ groupId, currentUserId, members, onClose, onCre
                     <span className={`text-xs px-1.5 py-0.5 rounded font-bold ${item.team === 'a' ? 'bg-blue-500/20 text-blue-400' : 'bg-orange-500/20 text-orange-400'}`}>
                       {item.team.toUpperCase()}
                     </span>
-                    <input type="number" min="0" max="99" placeholder="0" value={goals[item.key] ?? ''}
+                    <Input type="number" min="0" max="99" placeholder="0" value={goals[item.key] ?? ''}
                       onChange={e => setGoals(prev => ({ ...prev, [item.key]: e.target.value }))}
-                      className="bg-muted/50 border border-border rounded-lg px-2 py-1.5 text-xs outline-none focus:border-blue-500 text-center" />
-                    <input type="number" min="0" max="99" placeholder="0" value={assists[item.key] ?? ''}
+                      className="px-2 py-1.5 text-xs text-center" />
+                    <Input type="number" min="0" max="99" placeholder="0" value={assists[item.key] ?? ''}
                       onChange={e => setAssists(prev => ({ ...prev, [item.key]: e.target.value }))}
-                      className="bg-muted/50 border border-border rounded-lg px-2 py-1.5 text-xs outline-none focus:border-blue-500 text-center" />
+                      className="px-2 py-1.5 text-xs text-center" />
                   </div>
                 ))}
               </div>
@@ -279,19 +280,17 @@ export function GroupMatchForm({ groupId, currentUserId, members, onClose, onCre
 
         <div className="flex flex-col gap-1.5">
           <label className="text-xs text-muted-foreground">Fecha y hora del partido</label>
-          <input
+          <Input
             type="datetime-local"
             max={new Date().toISOString().slice(0, 16)}
             value={playedAt}
             onChange={e => setPlayedAt(e.target.value)}
-            className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors"
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
           <label className="text-xs text-muted-foreground">Link de repeticion (opcional)</label>
-          <input type="url" placeholder="https://..." value={replayUrl} onChange={e => setReplayUrl(e.target.value)}
-            className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 transition-colors" />
+          <Input type="url" placeholder="https://..." value={replayUrl} onChange={e => setReplayUrl(e.target.value)} />
         </div>
 
         <Button onClick={handleSubmit} disabled={submitting} className="w-full">
